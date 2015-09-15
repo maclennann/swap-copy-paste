@@ -1,19 +1,18 @@
 module.exports =
-
   activate: (state) ->
-    atom.workspaceView.command "swap-copy-paste:swap", => @swap()
+    atom.commands.add 'atom-text-editor',
+      "swap-copy-paste:swap": -> 
+        #console.log "Swap copy paste!"
 
-  swap: ->
-    # console.log "Swap copy paste!"
+        editor = atom.workspace.getActiveTextEditor()
+        if(editor)
 
-    editor = atom.workspace.getActiveTextEditor()
-    if(editor)
+          clipboard = atom.clipboard
+          clipboardText = clipboard.read()
 
-      clipboard = atom.clipboard
-      clipboardText = clipboard.read()
+          for selection in editor.getSelections()
+            selectedText = selection.getText()
 
-      for selection in editor.getSelections()
-        selectedText = selection.getText()
+            clipboard.write(selectedText)
+            selection.insertText(clipboardText)
 
-        clipboard.write(selectedText)
-        selection.insertText(clipboardText)
